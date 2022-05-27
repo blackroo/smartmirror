@@ -50,7 +50,7 @@ def init_hair_gui(self,MainWindow):
     self.dot1.setGeometry(QtCore.QRect(850, 450, 1000, 150))
     self.dot1.setObjectName("info")
     self.dot1.setFont(QtGui.QFont("맑은 고딕",30))
-    self.dot1.setStyleSheet("Color : white")
+    self.dot1.setStyleSheet("Color : green")
 
     self.dot2 = QtWidgets.QLabel(self.centralwidget)
     self.dot2.setGeometry(QtCore.QRect(900, 450, 1000, 150))
@@ -102,7 +102,7 @@ def thread_camera(self,MainWindow):
 
     info.wait_info_data(self,MainWindow)
 
-    #hair_setting_send(self,MainWindow)
+    hair_setting_send(self,MainWindow)
     
     self.camera_timer.show()
     for i in range(4,0,-1):
@@ -112,27 +112,35 @@ def thread_camera(self,MainWindow):
 
 
     self.set_txt("         사진 촬영중...")
-    #pi_camera()
-    #image_send(self,MainWindow)
+    pi_camera()
+    image_send(self,MainWindow)
     kakao_voice("얼굴 분석중 입니다. 잠시만 기달려 주세요")
     self.set_txt("         얼굴 분석 중")
 
     for i in dots:
         i.show()
+        sleep(0.01)
 
 
 
     for time in range(6//3):
         for i in range(3):
+            dots[i].setText("●")
+            sleep(0.01)
+            dots[i].setStyleSheet("Color : green") 
             for x in dots:
                 if x != dots[i]:
+                    sleep(0.01)
                     x.setText("●")
+                    sleep(0.01)
                     x.setStyleSheet("Color : white")
-            dots[i].setStyleSheet("Color : green")     
-            sleep(1)
+                
+            sleep(0.9)
 
     for i in dots:
         i.hide()
+        sleep(0.01)
+        
 
     self.set_txt("")
     
@@ -140,7 +148,7 @@ def thread_camera(self,MainWindow):
 헤어 추천이 완료되었습니다. \
 헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
 처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요.")
-
+    sleep(0.3)
     self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
     num = 1
     for i in photos:
@@ -151,6 +159,7 @@ def thread_camera(self,MainWindow):
         i.resize(450,450)
         i.show()
         num = num+1
+        sleep(0.01)
 
 
     btn_control.end_hair_voice_info(self,MainWindow)

@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import QPushButton
 from PIL import Image
 import numpy as np
 from gui import facegui,setupgui, timegui, info, btn_control
-import voice_control, image, user
+import voice_control, image, user, mqtt_recv
 
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import Qt

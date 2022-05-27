@@ -2,11 +2,13 @@ from time import sleep
 
 import cv2
 import time
+from mqtt_client import face_login,emotion_scan
 
 # Explicitly open a new file called my_image.jpg
 
 file_location = "temp/image/"
-
+login_face_location = "temp/login_image/"
+emotion_image_location = "temp/emotion_image/"
 
 
 face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -32,6 +34,8 @@ def pi_camera():
 def user_face_scan(self,MainWindow):
     global cap,face_classifier
 
+    i = 0
+
     if cap.isOpened():
         print('width: {}, height : {}'.format(cap.get(3), cap.get(4)))
     else:
@@ -49,11 +53,30 @@ def user_face_scan(self,MainWindow):
                 faces = face_classifier.detectMultiScale(gray,1.3,5)
                 
                 for (x,y,w,h) in faces:
-                    self.face_scan_enable = 1
-                    self.face_scan_timer = 600
+                    if(w>100 and h>100):
+                        self.face_scan_enable = 1
+                        self.face_scan_timer = 600
+                        if(self.window_status=="main"):
+                            now = time.localtime()
+                            file_name = f"{login_face_location}{now.tm_year}_{now.tm_mon}_{now.tm_mday}_{now.tm_hour}{now.tm_min}{now.tm_sec}_{i}.jpg"
+                            i = i+1
+                            if(i>1000):
+                                i = 0
+                            cv2.imwrite(f'{file_name}', frame)
+                            face_login(self,MainWindow)
+
+                        elif(self.window_status=="emotion"):
+                            now = time.localtime()
+                            file_name = f"{emotion_image_location}{now.tm_year}_{now.tm_mon}_{now.tm_mday}_{now.tm_hour}{now.tm_min}{now.tm_sec}_{i}.jpg"
+                            i = i+1
+                            if(i>1000):
+                                i = 0
+                            cv2.imwrite(f'{file_name}', frame)
+                            emotion_scan(self,MainWindow)
+                            pass
                     
 
-                sleep(0.1)
+                sleep(0.3)
                 #cv2.imshow('video', frame)
             else:
                 print('error')

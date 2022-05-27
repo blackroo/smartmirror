@@ -21,6 +21,7 @@ try:
 
             
             for (x,y,w,h) in faces:
+                print(w," ",h)
                 print("Test")
 
                 #cv2.imshow('face', cropped_face)

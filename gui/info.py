@@ -45,7 +45,7 @@ def init_info(self,MainWindow):
     self.infomation_txt.setStyleSheet("Color : white")
 
     self.voice_info = QtWidgets.QLabel(self.centralwidget)
-    self.voice_info.setGeometry(QtCore.QRect(50, 270, 500, 800))
+    self.voice_info.setGeometry(QtCore.QRect(50, 100, 500, 800))
     self.voice_info.setObjectName("info")
     self.voice_info.setFont(QtGui.QFont("NanumGothic",20))
     self.voice_info.setAlignment(Qt.AlignLeft)

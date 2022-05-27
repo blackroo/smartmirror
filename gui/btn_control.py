@@ -1,6 +1,7 @@
 
 from gui import info
 from voice_control import kakao_voice
+from time import sleep
 
 def main_page_voice_info(self,MainWindow):
     text_data = []
@@ -27,16 +28,22 @@ def end_hair_voice_info(self,MainWindow):
 
 def main_page_setting(self, MainWindow):
     text = "메인화면으로 돌아왔습니다.\n사용할 기능을 말씀해주세요"
+    main_ui_reset(self, MainWindow)
+    sleep(0.3)
     self.set_txt(text,1)
     kakao_voice(text)
-    main_ui_reset(self, MainWindow)
     
 
 def main_ui_reset(self, MainWindow):
     main_page_voice_info(self, MainWindow)
     self.window_status = "main"
+    sleep(0.01)
     self.photo1.hide()
+    sleep(0.01)
     self.photo2.hide()
+    sleep(0.01)
     self.photo3.hide()
+    sleep(0.01)
     self.photo4.hide()
+    sleep(0.01)
     self.camera_timer.hide()
