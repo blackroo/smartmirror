@@ -1,5 +1,4 @@
 from time import sleep
-from voice_control import kakao_voice
 from gui import btn_control
 now_stats = 0
 
@@ -16,7 +15,8 @@ def user_login(self,MainWindow):
 
 
             txt = "            홍길동님 반갑습니다.\n오늘은 어떤 머리를 하러 오셨나요?"
-            kakao_voice(txt)
+            # kakao_voice(txt)
+            self.voice_status_setting(txt,self.window_status)
             self.set_txt(txt,1)
             self.face_scan_enable = 0
 
@@ -29,7 +29,8 @@ def user_login(self,MainWindow):
             self.face_scan_enable = 0
             
             txt = "       자동 로그아웃 되었습니다."
-            kakao_voice(txt)
+            # kakao_voice(txt)
+            self.voice_status_setting(txt,self.window_status)
             self.set_txt(txt,1)
             btn_control.main_ui_reset(self,MainWindow)
 

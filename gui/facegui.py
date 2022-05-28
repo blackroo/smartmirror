@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QPushButton
 from gui import btn_control, info
 import mqtt_client
 import sys
-from voice_control import kakao_voice
+
 from user import status_check
 
 return_hair_location = "./temp/return_image/"
@@ -76,8 +76,9 @@ def init_hair_gui(self,MainWindow):
 def face_scan(self,MainWindow):
     text = "    - 커트 혹은 펌을 선택해 주세요 -"
     self.set_txt(text)
-    kakao_voice(text)
-    self.window_status = "init_hair"
+    # kakao_voice(text)
+    # self.window_status = "init_hair"
+    self.voice_status_setting(text,"init_hair")
     btn_control.init_hair_voice_info(self,MainWindow)
 
 def start_camera(self,MainWindow,user_hair):
@@ -90,8 +91,8 @@ def start_camera(self,MainWindow,user_hair):
     self.infomation_txt.setGeometry(QtCore.QRect(750, 420, 1000, 300))
     text = "     사진 촬영을 하겠습니다.\n       정면을 바라봐 주세요"
     self.set_txt(text)
-    kakao_voice(text)
-
+    # kakao_voice(text)
+    self.voice_status_setting(text,"wait")
     self.camera_start(MainWindow)
     # for i in range(3,0,-1):
     #     self.camera_timer.setText(i)
@@ -114,7 +115,9 @@ def thread_camera(self,MainWindow):
     self.set_txt("         사진 촬영중...")
     pi_camera()
     image_send(self,MainWindow)
-    kakao_voice("얼굴 분석중 입니다. 잠시만 기달려 주세요")
+    text = "얼굴 분석중 입니다. 잠시만 기달려 주세요"
+    # kakao_voice("얼굴 분석중 입니다. 잠시만 기달려 주세요")
+    self.voice_status_setting(text,"wait")
     self.set_txt("         얼굴 분석 중")
 
     for i in dots:
@@ -143,11 +146,15 @@ def thread_camera(self,MainWindow):
         
 
     self.set_txt("")
-    
-    kakao_voice("\
+    text = "\
 헤어 추천이 완료되었습니다. \
 헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
-처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요.")
+처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요."
+#     kakao_voice("\
+# 헤어 추천이 완료되었습니다. \
+# 헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
+# 처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요.")
+    self.voice_status_setting(text,"show_hair")
     sleep(0.3)
     self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
     num = 1
@@ -163,4 +170,3 @@ def thread_camera(self,MainWindow):
 
 
     btn_control.end_hair_voice_info(self,MainWindow)
-    self.window_status = "show_hair"

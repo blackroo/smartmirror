@@ -1,6 +1,5 @@
 
 from gui import info
-from voice_control import kakao_voice
 from time import sleep
 
 def main_page_voice_info(self,MainWindow):
@@ -31,7 +30,8 @@ def main_page_setting(self, MainWindow):
     main_ui_reset(self, MainWindow)
     sleep(0.3)
     self.set_txt(text,1)
-    kakao_voice(text)
+    # kakao_voice(text)
+    self.voice_status_setting(text,"main")
     
 
 def main_ui_reset(self, MainWindow):
