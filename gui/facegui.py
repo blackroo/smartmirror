@@ -6,11 +6,13 @@ from picamera import PiCamera
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QPushButton
 from gui import btn_control, info
+from PIL import Image,ImageDraw,ImageFont
 import mqtt_client
 import sys
+import os
 
 from user import status_check
-
+fontsFolder = './font'    #글자로 쓸 폰트 경로
 return_hair_location = "./temp/return_image/"
 
 hair_data = {
@@ -20,6 +22,8 @@ hair_data = {
 
 photos = []
 dots = []
+
+image_choice_num = 0
 
 def init_hair_gui(self,MainWindow):
     global photos, dots
@@ -99,7 +103,7 @@ def start_camera(self,MainWindow,user_hair):
 
     
 def thread_camera(self,MainWindow):
-    global photos,dots,return_hair_location
+    global photos,dots,return_hair_location,image_choice_num
 
     info.wait_info_data(self,MainWindow)
 
@@ -148,6 +152,7 @@ def thread_camera(self,MainWindow):
     self.set_txt("")
     text = "\
 헤어 추천이 완료되었습니다. \
+미용하실 헤어스타일의 번호를 말씀해 주세요.\
 헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
 처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요."
 #     kakao_voice("\
@@ -157,6 +162,9 @@ def thread_camera(self,MainWindow):
     self.voice_status_setting(text,"show_hair")
     sleep(0.3)
     self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
+
+    image_numbering()
+
     num = 1
     for i in photos:
         file_name = "test" + f"{num}"
@@ -168,5 +176,100 @@ def thread_camera(self,MainWindow):
         num = num+1
         sleep(0.01)
 
-
+    image_choice_num = 0
     btn_control.end_hair_voice_info(self,MainWindow)
+
+
+
+
+def image_numbering():
+
+    global return_hair_location, fontsFolder
+
+    x = 1
+    for i in range(4) :
+        file_name = "test" + f"{x}"
+        target_image = Image.open(f'{return_hair_location}{file_name}.jpg')  #일단 기본배경폼 이미지를 open 합니다.
+        selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
+        draw =ImageDraw.Draw(target_image)
+
+        draw.text((20,400),f'{x}',fill="yellow",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
+
+        x = x+1
+
+        test = target_image.convert('RGB')
+
+        test.save(f"{return_hair_location}{file_name}.jpg") #편집된 이미지를 저장합니다.
+
+        target_image.close()
+
+def image_choice(self,MainWindow,number):
+    global return_hair_location, fontsFolder,photos,image_choice_num
+
+    file_name = "test" + f"{number}"
+    target_image = Image.open(f'{return_hair_location}{file_name}.jpg')  #일단 기본배경폼 이미지를 open 합니다.
+    selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
+    draw =ImageDraw.Draw(target_image)
+
+    draw.line((0, 0, 0, 458), fill="yellow", width=7)
+    draw.line((0, 458, 460, 458), fill="yellow", width=7)
+    draw.line((460, 0, 460, 458), fill="yellow", width=7)
+    draw.line((0, 0, 460, 0), fill="yellow", width=7)
+
+
+    test = target_image.convert('RGB')
+
+    test.save(f"{return_hair_location}choice.jpg") #편집된 이미지를 저장합니다.
+
+    target_image.close()
+
+    sleep(0.01)
+
+    pixmap = QtGui.QPixmap(f"{return_hair_location}choice.jpg")
+    pixmap = pixmap.scaledToWidth(450)
+    photos[number-1].setPixmap(QPixmap(pixmap))
+    photos[number-1].resize(450,450)
+    photos[number-1].show()
+    sleep(0.01)
+
+    image_choice_num = number
+
+    text = f"{number}번을 선택하셨습니다. 맞으면 확인, 다르면 취소라 말씀해주세요."
+    self.voice_status_setting(text,"choice_hair")
+
+    btn_control.choice_num_check(self,MainWindow)
+
+def cancel_choice(self,MainWindow):
+    global image_choice_num
+
+    pixmap = QtGui.QPixmap(f"{return_hair_location}test{image_choice_num}.jpg")
+    pixmap = pixmap.scaledToWidth(450)
+    photos[image_choice_num-1].setPixmap(QPixmap(pixmap))
+    photos[image_choice_num-1].resize(450,450)
+    photos[image_choice_num-1].show()
+    sleep(0.01)
+
+    text = f"취소했습니다. 다른 번호를 선택하시거나 기능을 말씀해 주세요."
+    self.voice_status_setting(text,"show_hair")
+    image_choice_num = 0
+    btn_control.end_hair_voice_info(self,MainWindow)
+
+def ckeck_choice(self,MainWindow):
+    global image_choice_num,photos
+    
+    for i in photos:
+        i.hide()
+        sleep(0.01)
+
+    text = f"                미용을 시작하겠습니다.\n미용이 끝나시면 '계산' 혹은 '종료'라고 말씀해 주세요."
+    self.set_txt(text,1)
+    self.voice_status_setting(text,"start_hair")
+    image_choice_num = 0
+    btn_control.start_hair(self,MainWindow)
+    
+def end_hair(self,MainWindow):
+    text = f"미용이 종료되었습니다.\n 즐거운 하루 보내세요."
+    self.set_txt(text,1)
+    self.voice_status_setting(text,"main")
+
+    btn_control.main_page_voice_info(self,MainWindow)

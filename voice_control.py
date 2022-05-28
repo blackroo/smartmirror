@@ -27,6 +27,16 @@ cmd_cut = ["커트", "컷", "코트", "커튼", "캡처","커피","커플"]
 cmd_perm = ["펌", "퍼머", "파마"]
 
 
+choice_1 = ["1번", "일본", "일번"]
+choice_2 = ["2번", "이본", "이번"]
+choice_3 = ["3번", "삼본", "삼번"]
+choice_4 = ["4번", "사본", "사번"]
+
+choice_ckeck = ["확인"]
+choice_cancel = ["취소"]
+
+end_hair = ["계산", "종료"]
+
 def voice_scan(self,MainWindow):
     while 1:
         with sr.Microphone() as source:
@@ -49,6 +59,8 @@ def voice_scan(self,MainWindow):
 
 def voice_command(self,MainWindow,input_data):
     global cmd_main, cmd_facescan, cmd_cut, cmd_perm
+    global choice_1, choice_2, choice_3, choice_4
+    global choice_cancel, choice_ckeck, end_hair
 
 
     #메인화면 돌아가기   
@@ -70,6 +82,28 @@ def voice_command(self,MainWindow,input_data):
             facegui.start_camera(self,MainWindow,"cut")
         if(voice_check(input_data, cmd_perm)):
             facegui.start_camera(self,MainWindow,"perm")
+
+    elif(self.window_status == "show_hair"):
+        if(voice_check(input_data, choice_1)):
+            facegui.image_choice(self,MainWindow,1)
+        elif(voice_check(input_data, choice_2)):
+            facegui.image_choice(self,MainWindow,2)
+        elif(voice_check(input_data, choice_3)):
+            facegui.image_choice(self,MainWindow,3)
+        elif(voice_check(input_data, choice_4)):
+            facegui.image_choice(self,MainWindow,4)
+
+    elif(self.window_status == "choice_hair"):
+        if(voice_check(input_data, choice_ckeck)):
+            facegui.ckeck_choice(self,MainWindow)
+        elif(voice_check(input_data, choice_cancel)):
+            facegui.cancel_choice(self,MainWindow)
+
+    elif(self.window_status == "start_hair"):
+        if(voice_check(input_data, end_hair)):
+            facegui.end_hair(self,MainWindow)
+
+
 
 
 def voice_check(input_data,cmd):

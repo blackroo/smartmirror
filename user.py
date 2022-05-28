@@ -24,15 +24,18 @@ def user_login(self,MainWindow):
             self.face_scan_timer = self.face_scan_timer -1
         
         elif now_stats == 1 and self.face_scan_timer == 0:
-            self.face_scan_timer = -1
-            now_stats = 0
-            self.face_scan_enable = 0
-            
-            txt = "       자동 로그아웃 되었습니다."
-            # kakao_voice(txt)
-            self.voice_status_setting(txt,self.window_status)
-            self.set_txt(txt,1)
-            btn_control.main_ui_reset(self,MainWindow)
+            if self.window_status == "start_hair":
+                self.face_scan_timer == 600
+            else:    
+                self.face_scan_timer = -1
+                now_stats = 0
+                self.face_scan_enable = 0
+                
+                txt = "       자동 로그아웃 되었습니다."
+                # kakao_voice(txt)
+                self.voice_status_setting(txt,self.window_status)
+                self.set_txt(txt,1)
+                btn_control.main_ui_reset(self,MainWindow)
 
         #print(f"{now_stats}, {self.face_scan_timer}")
         sleep(0.1)

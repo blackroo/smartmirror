@@ -19,9 +19,26 @@ def init_hair_voice_info(self,MainWindow):
 
 def end_hair_voice_info(self,MainWindow):
     text_data = []
+    text_data.append(["헤어스타일 선택", "1번, 2번, 3번, 4번"])
+    text_data.append(["헤어스타일 설명", "설명 해줘"])
     text_data.append(["메인화면", "메인화면 돌아가줘"])
 
     
+    info.set_info_data(self,MainWindow,text_data)
+
+def choice_num_check(self,MainWindow):
+    text_data = []
+    text_data.append(["미용할 사진번호가 맞으면", "확인"])
+    text_data.append(["번호가 다르면", "취소"])
+    text_data.append(["메인화면", "메인화면 돌아가줘"])
+
+    
+    info.set_info_data(self,MainWindow,text_data)
+
+def start_hair(self,MainWindow):
+    text_data = []
+    text_data.append(["미용이 끝나면", "계산\" 혹은 \"종료"])
+
     info.set_info_data(self,MainWindow,text_data)
 
 
