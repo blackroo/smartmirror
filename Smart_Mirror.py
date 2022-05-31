@@ -52,6 +52,11 @@ class Ui_MainWindow(object):
     info_data = ""
     txt_timer = -1
 
+    mqtt_status = 0
+    mqtt_recv_end = 0
+
+    video_stop = 0
+
     def setupUi(self, MainWindow):
         setupgui.setupUi(self, MainWindow)
 
@@ -100,12 +105,15 @@ class Ui_MainWindow(object):
     def auto_user_login(self,MainWindow):
         user.user_login(self,MainWindow)
 
-
+    #음성안내 출력
     def voice_status_setting(self,voice_txt,window_status):
         self.voice_txt = voice_txt
         self.window_status = window_status
         self.sound_start(MainWindow)
 
+    #mqtt상태 저장
+    def mqtt_status_save(self,MainWindow):
+        mqtt_recv.recv_status_check(self,MainWindow)
  
     #----------------------------------------------------------------------------------------------------
     #------------------------ 쓰레드 ---------------------------------------------------------------------
@@ -147,6 +155,11 @@ class Ui_MainWindow(object):
         thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
         thread.start()
 
+    def mqtt_start(self,MainWindow):
+        thread=threading.Thread(target=self.mqtt_status_save,args=(self,))
+        thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
+        thread.start()
+
 
 #-------------메인---------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------
@@ -166,6 +179,7 @@ if __name__=="__main__":
     ui.mic_start(MainWindow)
     ui.user_scan(MainWindow)
     ui.login_timer(MainWindow)
+    ui.mqtt_start(MainWindow)
 
     MainWindow.show()
 

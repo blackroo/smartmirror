@@ -21,7 +21,8 @@ def user_login(self,MainWindow):
             self.face_scan_enable = 0
 
         if now_stats == 1 and self.face_scan_timer > 0 :
-            self.face_scan_timer = self.face_scan_timer -1
+            if self.video_stop == 0:
+                self.face_scan_timer = self.face_scan_timer -1  
         
         elif now_stats == 1 and self.face_scan_timer == 0:
             if self.window_status == "start_hair":

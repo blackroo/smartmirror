@@ -1,15 +1,20 @@
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
-import time
+from time import sleep
+import json
 
 
+status = 0
+photo_num = 1
+recv_end = 0
 
+photo_save_location = "./temp/return_image/"
 
 client = mqtt.Client()
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("connected OK")
+        print("mirror image client OK")
     else:
         print("Bad connection Returned code=", rc)
 
@@ -23,13 +28,44 @@ def on_subscribe(client, userdata, mid, granted_qos):
     pass
 
 def on_message(client, userdata, msg):
-    try:
-        message = str(msg.payload.decode("utf-8"))
-        print(message)
-    except:
-        print("message error")
+    global status, photo_num, photo_save_location, recv_end
+
+    if status == 1:
+        try:
+            check = str(msg.payload.decode("utf-8"))
+            try:
+                d = json.loads(msg.payload)
+                print(d['success'])
+            except:
+                print("message error1")
+                print("error: "+check)
+                print()
+
+        except:
+            try:
+                f = open(f"{photo_save_location}test{photo_num}", "wb")
+                f.write(msg.payload)
+                print("Image Received")
+                f.close()
+                photo_num = photo_num + 1
+
+                if photo_num>=5 : 
+                    photo_num = 1
+                    recv_end = 1
+            except:
+                print("message error2")
 
     
+def recv_status_check(self,MainWindow):
+    global status, recv_end, photo_num
+    while 1: 
+        status = self.mqtt_status
+        if recv_end == 1:
+            self.mqtt_recv_end = 1
+            recv_end = 0
+        if status == 0:
+            photo_num = 1
+        sleep(0.2)
 
 
 

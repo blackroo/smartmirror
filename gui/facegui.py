@@ -108,7 +108,10 @@ def thread_camera(self,MainWindow):
     info.wait_info_data(self,MainWindow)
 
     hair_setting_send(self,MainWindow)
-    
+    self.mqtt_status = 1
+    self.mqtt_recv_end = 0
+    self.video_stop == 1
+
     self.camera_timer.show()
     for i in range(4,0,-1):
         self.camera_timer.setText(f"{i}")
@@ -119,6 +122,8 @@ def thread_camera(self,MainWindow):
     self.set_txt("         사진 촬영중...")
     pi_camera()
     image_send(self,MainWindow)
+    
+
     text = "얼굴 분석중 입니다. 잠시만 기달려 주세요"
     # kakao_voice("얼굴 분석중 입니다. 잠시만 기달려 주세요")
     self.voice_status_setting(text,"wait")
@@ -126,23 +131,30 @@ def thread_camera(self,MainWindow):
 
     for i in dots:
         i.show()
-        sleep(0.01)
+        sleep(0.1)
 
 
 
-    for time in range(6//3):
+    for time in range(12//3):
         for i in range(3):
             dots[i].setText("●")
             sleep(0.01)
             dots[i].setStyleSheet("Color : green") 
             for x in dots:
                 if x != dots[i]:
-                    sleep(0.01)
+                    sleep(0.05)
                     x.setText("●")
-                    sleep(0.01)
+                    sleep(0.05)
                     x.setStyleSheet("Color : white")
                 
-            sleep(0.9)
+            sleep(0.8)
+        
+        if self.mqtt_recv_end == 1:
+            break
+
+    self.mqtt_recv_end = 0
+    self.mqtt_status = 0    
+    self.video_stop == 0
 
     for i in dots:
         i.hide()
@@ -234,7 +246,7 @@ def image_choice(self,MainWindow,number):
 
     image_choice_num = number
 
-    text = f"{number}번을 선택하셨습니다. 맞으면 확인, 다르면 취소라 말씀해주세요."
+    text = f"{number}번을 선택하셨습니다. 맞으면 확인, 다르면 취소라 말씀해 주세요."
     self.voice_status_setting(text,"choice_hair")
 
     btn_control.choice_num_check(self,MainWindow)

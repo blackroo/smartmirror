@@ -14,10 +14,13 @@ emotion_image_location = "temp/emotion_image/"
 face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap = cv2.VideoCapture(0)
 
+
 def pi_camera():
     global cap,ret, frame
 
     print("start camera")
+
+
     now = time.localtime()
 
     ret, frame = cap.read() 
@@ -31,12 +34,15 @@ def pi_camera():
 
 
 
+
 def user_face_scan(self,MainWindow):
     global cap,face_classifier
 
     i = 0
     text_num = 0
     time_count = 0
+    error_count = 0
+
     if cap.isOpened():
         print('width: {}, height : {}'.format(cap.get(3), cap.get(4)))
     else:
@@ -47,7 +53,7 @@ def user_face_scan(self,MainWindow):
 
         while True:
             ret, frame = cap.read() 
-            if ret:
+            if ret and self.video_stop == 0:
 
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 # 얼굴 검출
@@ -67,7 +73,7 @@ def user_face_scan(self,MainWindow):
                             face_login(self,MainWindow)
 
                         elif(self.window_status=="start_hair"):
-                            if time_count>=40:
+                            if time_count>=130:
                                 now = time.localtime()
                                 file_name = f"{emotion_image_location}{now.tm_year}_{now.tm_mon}_{now.tm_mday}_{now.tm_hour}{now.tm_min}{now.tm_sec}_{i}.jpg"
                                 i = i+1
@@ -82,14 +88,27 @@ def user_face_scan(self,MainWindow):
                 time_count = time_count +1
                 if time_count>5000:
                     time_count = 100
-                sleep(0.15)
+                sleep(0.05)
                 #cv2.imshow('video', frame)
+                error_count = 0
             else:
-                print('error')
-                sleep(0.5)
+                print('video error')
+                print(self.video_stop)
+                sleep(1)
+                error_count = error_count + 1
+                if error_count > 30:
+                    cap.release()
+                    del cap
+                    cap = cv2.VideoCapture(0)
+                    if cap.isOpened():
+                        print('width: {}, height : {}'.format(cap.get(3), cap.get(4)))
+                    else:
+                        print("No Camera")
+                    error_count = 20
+
             
     except:
-        print("error")
+        print("video end")
         cap.release()
         cv2.destroyAllWindows()
 
