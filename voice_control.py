@@ -6,7 +6,7 @@ import speech_recognition as sr
 import requests
 import json
 import io
-from gui import facegui, btn_control
+from gui import facegui, btn_control, trendgui
 from pydub import AudioSegment
 from pydub.playback import play
 import vlc
@@ -21,11 +21,10 @@ player = vlc.MediaPlayer(voice_file)
 
 cmd_main = ["메인 화면", "초기 화면", "처음으로 돌아가줘", "메일함"]
 
-cmd_facescan = ["얼굴 인식","얼굴 분석","머리 추천", "머리 분석", "헤어스타일 추천", "헤어 추천",]
+cmd_facescan = ["얼굴 인식","얼굴 분석","머리 추천", "머리 분석", "헤어스타일 추천", "헤어 추천","추천해 줘"]
 
 cmd_cut = ["커트", "컷", "코트", "커튼", "캡처","커피","커플"]
 cmd_perm = ["펌", "퍼머", "파마"]
-
 
 choice_1 = ["1번", "일본", "일번"]
 choice_2 = ["2번", "이본", "이번"]
@@ -36,6 +35,10 @@ choice_ckeck = ["확인"]
 choice_cancel = ["취소"]
 
 end_hair = ["계산", "종료"]
+
+cmd_trend = ["유행", "우행", "유행하는 머리", "우행하는 머리", "최신 유행"]
+cmd_men = ["남성", "남자","삼성"]
+cmd_women = ["여성", "여자"]
 
 def voice_scan(self,MainWindow):
     while 1:
@@ -58,9 +61,10 @@ def voice_scan(self,MainWindow):
             pass
 
 def voice_command(self,MainWindow,input_data):
-    global cmd_main, cmd_facescan, cmd_cut, cmd_perm
+    global cmd_main, cmd_facescan, cmd_cut, cmd_perm, cmd_trend
     global choice_1, choice_2, choice_3, choice_4
     global choice_cancel, choice_ckeck, end_hair
+    global cmd_trend, cmd_men, cmd_women
 
 
     #메인화면 돌아가기   
@@ -72,6 +76,14 @@ def voice_command(self,MainWindow,input_data):
         if(voice_check(input_data, cmd_facescan)):
             if(self.face_scan_timer > 0):
                 facegui.face_scan(self,MainWindow)
+            else:
+                text = "거울 앞에 아무도 없습니다.\n자리에 앉아서 작동해주세요"
+                kakao_voice(text)
+                self.set_txt(text,1)
+
+        if(voice_check(input_data, cmd_trend)):
+            if(self.face_scan_timer > 0):
+                trendgui.start_trend(self,MainWindow)
             else:
                 text = "거울 앞에 아무도 없습니다.\n자리에 앉아서 작동해주세요"
                 kakao_voice(text)
@@ -103,7 +115,11 @@ def voice_command(self,MainWindow,input_data):
         if(voice_check(input_data, end_hair)):
             facegui.end_hair(self,MainWindow)
 
-
+    elif(self.window_status == "init_trand"):
+        if(voice_check(input_data, cmd_men)):
+            trendgui.select_trend(self,MainWindow,"men")
+        elif(voice_check(input_data, cmd_women)):
+            trendgui.select_trend(self,MainWindow,"women")
 
 
 def voice_check(input_data,cmd):

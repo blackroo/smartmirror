@@ -131,7 +131,7 @@ def thread_camera(self,MainWindow):
 
     self.camera_timer.show()
 
-    for i in range(10):
+    for i in range(1):
         self.camera_timer.setText(f"{i+1}/10")      
         sleep(1)
         
@@ -146,15 +146,15 @@ def thread_camera(self,MainWindow):
 
         
 
-    if json_save == {}:
-#     if json_save != {}:
-#         self.face_type.setText(f"\
-# {self.user_name}님의 얼굴형\n\
-#      - {json_save['face_shape']}\n\
-# {self.user_name}님의 현재 헤어스타일\n\
-#      - {json_save['before_hair']}")
+    # if json_save == {}:
+    if json_save != {}:
+        self.face_type.setText(f"\
+{self.user_name}님의 얼굴형\n\
+     - {json_save['face_shape']}\n\
+{self.user_name}님의 현재 헤어스타일\n\
+     - {json_save['before_hair']}")
 
-#         self.face_type.show()
+        self.face_type.show()
 
 
 
@@ -193,6 +193,8 @@ def thread_camera(self,MainWindow):
         btn_control.main_ui_reset(self,MainWindow)
 
         pass
+
+    sys.exit(0)
 
 
 

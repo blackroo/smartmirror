@@ -51,6 +51,20 @@ def main_page_setting(self, MainWindow):
     self.voice_status_setting(text,"main")
     
 
+def init_hair_trend(self,MainWindow):
+    text_data = []
+    text_data.append(["남성 헤어스타일 추천", "남성"])
+    text_data.append(["여성 헤어스타일 추천", "여성"])
+    text_data.append(["메인화면", "메인화면 돌아가줘"])
+    
+    info.set_info_data(self,MainWindow,text_data)
+
+def end_trend_info(self,MainWindow):
+    text_data = []
+    text_data.append(["메인화면", "메인화면 돌아가줘"])
+    
+    info.set_info_data(self,MainWindow,text_data)
+
 def main_ui_reset(self, MainWindow):
     main_page_voice_info(self, MainWindow)
     self.window_status = "main"
@@ -63,6 +77,9 @@ def main_ui_reset(self, MainWindow):
     sleep(0.01)
     self.photo4.hide()
     sleep(0.01)
-    self.camera_timer.hide()
-    sleep(0.01)
+
     self.face_type.hide()
+    sleep(0.01)
+    self.chart_img.hide()
+    sleep(0.01)
+    self.camera_timer.hide()

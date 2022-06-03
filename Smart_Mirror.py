@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QPushButton
 
 from PIL import Image
 import numpy as np
-from gui import facegui,setupgui, timegui, info, btn_control
+from gui import facegui,setupgui, timegui, info, btn_control,trendgui
 import voice_control, image, user, mqtt_recv
 
 from PyQt5.QtGui import QPainter, QPen
@@ -85,7 +85,9 @@ class Ui_MainWindow(object):
         facegui.thread_camera(self,MainWindow)
 
 
-
+    def trend_start(self,MainWindow):
+        print("trend start")
+        trendgui.trend_hair(self,MainWindow)
 
     
     #시간을 알려주는 함수 메인 화면에 생성
@@ -157,6 +159,11 @@ class Ui_MainWindow(object):
 
     def mqtt_start(self,MainWindow):
         thread=threading.Thread(target=self.mqtt_status_save,args=(self,))
+        thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
+        thread.start()
+
+    def trend_thread(self,MainWindow):
+        thread=threading.Thread(target=self.trend_start,args=(self,))
         thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
         thread.start()
 

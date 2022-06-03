@@ -2,7 +2,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets #pip install pyqt5(pip install python3-pyqt5)
 from PyQt5.QtWidgets import QPushButton
 
-from gui import info, facegui
+from gui import info, facegui, trendgui
 
 
 def setupUi(self, MainWindow):
@@ -28,6 +28,7 @@ def setupUi(self, MainWindow):
         # maingui.start_mirror(self, MainWindow)
         info.init_info(self, MainWindow)
         facegui.init_hair_gui(self, MainWindow)
+        trendgui.init_trend(self, MainWindow)
         #-------------------------------------------------------------------------------------
 
         MainWindow.setCentralWidget(self.centralwidget)
