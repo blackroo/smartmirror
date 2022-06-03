@@ -21,15 +21,17 @@ hair_data = {
 }
 
 photos = []
-dots = []
+
 
 image_choice_num = 0
 
+json_save = {}
+
 def init_hair_gui(self,MainWindow):
-    global photos, dots
+    global photos
 
     self.camera_timer = QtWidgets.QLabel(self.centralwidget)
-    self.camera_timer.setGeometry(QtCore.QRect(950, 500, 1000, 150))
+    self.camera_timer.setGeometry(QtCore.QRect(850, 500, 1000, 150))
     self.camera_timer.setObjectName("info")
     self.camera_timer.setFont(QtGui.QFont("맑은 고딕",50))
     self.camera_timer.setStyleSheet("Color : white")
@@ -50,34 +52,32 @@ def init_hair_gui(self,MainWindow):
     self.photo4.setGeometry(QtCore.QRect(1000,600,10,60))
     self.photo4.resize(0,0)
 
-    self.dot1 = QtWidgets.QLabel(self.centralwidget)
-    self.dot1.setGeometry(QtCore.QRect(850, 450, 1000, 150))
-    self.dot1.setObjectName("info")
-    self.dot1.setFont(QtGui.QFont("맑은 고딕",30))
-    self.dot1.setStyleSheet("Color : green")
-
-    self.dot2 = QtWidgets.QLabel(self.centralwidget)
-    self.dot2.setGeometry(QtCore.QRect(900, 450, 1000, 150))
-    self.dot2.setObjectName("info")
-    self.dot2.setFont(QtGui.QFont("맑은 고딕",30))
-    self.dot2.setStyleSheet("Color : white")
-
-    self.dot3 = QtWidgets.QLabel(self.centralwidget)
-    self.dot3.setGeometry(QtCore.QRect(950, 450, 1000, 150))
-    self.dot3.setObjectName("info")
-    self.dot3.setFont(QtGui.QFont("맑은 고딕",30))
-    self.dot3.setStyleSheet("Color : white")
 
     photos.append(self.photo1)
     photos.append(self.photo2)
     photos.append(self.photo3)
     photos.append(self.photo4)
 
-    dots.append(self.dot1)
-    dots.append(self.dot2)
-    dots.append(self.dot3)
+
+
+    self.face_type = QtWidgets.QLabel(self.centralwidget)
+    self.face_type.setGeometry(QtCore.QRect(1500, 200, 1000, 150))
+    self.face_type.setObjectName("info")
+    self.face_type.setFont(QtGui.QFont("맑은 고딕",20))
+    self.face_type.setStyleSheet("Color : white")
+
+
+def json_val_save(json_val):
+    global json_save
+    json_save = json_val
+    print(json_save)
+
+
 
 def face_scan(self,MainWindow):
+    global json_save
+    json_save = {}
+
     text = "    - 커트 혹은 펌을 선택해 주세요 -"
     self.set_txt(text)
     # kakao_voice(text)
@@ -103,7 +103,7 @@ def start_camera(self,MainWindow,user_hair):
 
     
 def thread_camera(self,MainWindow):
-    global photos,dots,return_hair_location,image_choice_num
+    global photos,return_hair_location,image_choice_num, json_save
 
     info.wait_info_data(self,MainWindow)
 
@@ -114,7 +114,7 @@ def thread_camera(self,MainWindow):
 
     self.camera_timer.show()
     for i in range(4,0,-1):
-        self.camera_timer.setText(f"{i}")
+        self.camera_timer.setText(f"    {i}")
         sleep(1)
     self.camera_timer.hide()
 
@@ -125,71 +125,74 @@ def thread_camera(self,MainWindow):
     
 
     text = "얼굴 분석중 입니다. 잠시만 기달려 주세요"
-    # kakao_voice("얼굴 분석중 입니다. 잠시만 기달려 주세요")
+
     self.voice_status_setting(text,"wait")
-    self.set_txt("         얼굴 분석 중")
+    self.set_txt("         얼굴 분석 중...")
 
-    for i in dots:
-        i.show()
-        sleep(0.1)
+    self.camera_timer.show()
 
-
-
-    for time in range(12//3):
-        for i in range(3):
-            dots[i].setText("●")
-            sleep(0.01)
-            dots[i].setStyleSheet("Color : green") 
-            for x in dots:
-                if x != dots[i]:
-                    sleep(0.05)
-                    x.setText("●")
-                    sleep(0.05)
-                    x.setStyleSheet("Color : white")
-                
-            sleep(0.8)
+    for i in range(10):
+        self.camera_timer.setText(f"{i+1}/10")      
+        sleep(1)
         
         if self.mqtt_recv_end == 1:
             break
+    
+    self.camera_timer.hide()
 
     self.mqtt_recv_end = 0
     self.mqtt_status = 0    
     self.video_stop == 0
 
-    for i in dots:
-        i.hide()
-        sleep(0.01)
         
 
-    self.set_txt("")
-    text = "\
-헤어 추천이 완료되었습니다. \
-미용하실 헤어스타일의 번호를 말씀해 주세요.\
-헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
-처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요."
-#     kakao_voice("\
-# 헤어 추천이 완료되었습니다. \
-# 헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
-# 처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요.")
-    self.voice_status_setting(text,"show_hair")
-    sleep(0.3)
-    self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
+    if json_save == {}:
+#     if json_save != {}:
+#         self.face_type.setText(f"\
+# {self.user_name}님의 얼굴형\n\
+#      - {json_save['face_shape']}\n\
+# {self.user_name}님의 현재 헤어스타일\n\
+#      - {json_save['before_hair']}")
 
-    image_numbering()
+#         self.face_type.show()
 
-    num = 1
-    for i in photos:
-        file_name = "test" + f"{num}"
-        pixmap = QtGui.QPixmap(f"{return_hair_location}{file_name}.jpg")
-        pixmap = pixmap.scaledToWidth(450)
-        i.setPixmap(QPixmap(pixmap))
-        i.resize(450,450)
-        i.show()
-        num = num+1
-        sleep(0.01)
 
-    image_choice_num = 0
-    btn_control.end_hair_voice_info(self,MainWindow)
+
+        self.set_txt("")
+        text = "\
+    헤어 추천이 완료되었습니다. \
+    미용하실 헤어스타일의 번호를 말씀해 주세요.\
+    헤어스타일 안내가 필요하시면 \"설명해줘\" 라고 말씀해 주세요.\
+    처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요."
+
+
+        self.voice_status_setting(text,"show_hair")
+        sleep(0.3)
+        self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
+
+        image_numbering()
+
+        num = 1
+        for i in photos:
+            file_name = "test" + f"{num}"
+            pixmap = QtGui.QPixmap(f"{return_hair_location}{file_name}.jpg")
+            pixmap = pixmap.scaledToWidth(450)
+            i.setPixmap(QPixmap(pixmap))
+            i.resize(450,450)
+            i.show()
+            num = num+1
+            sleep(0.01)
+
+        image_choice_num = 0
+        btn_control.end_hair_voice_info(self,MainWindow)
+
+    else : 
+        txt = "서버와 연결 실패했습니다.\n직원에게 문의해주세요"
+        self.set_txt(txt,1)
+        self.voice_status_setting(txt,"main")
+        btn_control.main_ui_reset(self,MainWindow)
+
+        pass
 
 
 

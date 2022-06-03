@@ -28,12 +28,12 @@ def image_send(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{dir_path}/{i}")
-        #publish.single(f"{directory}", byteArr, hostname="54.150.133.192")
+        publish.single(f"{directory}", byteArr, hostname="54.150.133.192")
  
 def hair_setting_send(self,MainWindow):
 
     msg = f"init_hair,{self.user_name},{self.user_phone},{self.user_type},{self.user_hair}"
-    #publish.single("Image", msg, hostname="54.150.133.192")
+    publish.single("Image", msg, hostname="54.150.133.192")
 
 def face_login(self,MainWindow):
     file_list = os.listdir(login_dir_path)
@@ -51,4 +51,4 @@ def emotion_scan(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{emotion_dir_path}/{i}")
-        #publish.single(f"feel", byteArr, hostname="54.150.133.192")
+        publish.single(f"feel", byteArr, hostname="54.150.133.192")

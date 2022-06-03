@@ -64,3 +64,5 @@ def main_ui_reset(self, MainWindow):
     self.photo4.hide()
     sleep(0.01)
     self.camera_timer.hide()
+    sleep(0.01)
+    self.face_type.hide()

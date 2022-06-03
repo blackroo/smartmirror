@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 from time import sleep
 import json
-
+from gui import facegui
 
 status = 0
 photo_num = 1
@@ -27,15 +27,26 @@ def on_subscribe(client, userdata, mid, granted_qos):
     #print("subscribed: " + str(mid) + " " + str(granted_qos))
     pass
 
+
+def message_type(json_type):
+    if json_type['type'] == 'bigdata':
+        facegui.json_val_save(json_type)
+        print("json recv")
+    pass
+
+
+
 def on_message(client, userdata, msg):
     global status, photo_num, photo_save_location, recv_end
 
     if status == 1:
         try:
             check = str(msg.payload.decode("utf-8"))
+            print("msg recv")
             try:
                 d = json.loads(msg.payload)
-                print(d['success'])
+                message_type(d)
+                
             except:
                 print("message error1")
                 print("error: "+check)
@@ -43,7 +54,7 @@ def on_message(client, userdata, msg):
 
         except:
             try:
-                f = open(f"{photo_save_location}test{photo_num}", "wb")
+                f = open(f"{photo_save_location}test{photo_num}.jpg", "wb")
                 f.write(msg.payload)
                 print("Image Received")
                 f.close()
