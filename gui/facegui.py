@@ -147,7 +147,7 @@ def start_camera(self,MainWindow,user_hair):
         pixmap = pixmap.scaledToWidth(450)
         self.perm_img.setPixmap(QPixmap(pixmap))
 
-    sleep(3)
+    sleep(2.5)
     self.cut_img.hide()
     self.perm_img.hide()
 
@@ -205,11 +205,11 @@ def thread_camera(self,MainWindow):
 
         
 
-    # if json_save == {}:
-    #     json_save = {
-    #         'face_shape' : '테스트중_통신차단',
-    #         'before_hair' : '테스트중_통신차단'
-    #     }
+    #if json_save == {}:
+    #    json_save = {
+    #        'face_shape' : '테스트중_통신차단',
+    #        'before_hair' : '테스트중_통신차단'
+    #    }
 
     if json_save != {}:
 
@@ -277,7 +277,10 @@ def image_numbering():
         selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
         draw =ImageDraw.Draw(target_image)
 
-        draw.text((20,400),f'{x}',fill="yellow",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
+        height_ratio = target_image.size[1]-450
+        height_ratio = height_ratio/2
+
+        draw.text((20,20+height_ratio),f'{x}',fill="yellow",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
 
         x = x+1
 
@@ -286,6 +289,7 @@ def image_numbering():
         test.save(f"{return_hair_location}{file_name}.jpg") #편집된 이미지를 저장합니다.
 
         target_image.close()
+        test.close()
 
 def image_choice(self,MainWindow,number):
     global return_hair_location, fontsFolder,photos,image_choice_num
@@ -295,10 +299,18 @@ def image_choice(self,MainWindow,number):
     selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
     draw =ImageDraw.Draw(target_image)
 
-    draw.line((0, 0, 0, 458), fill="yellow", width=7)
-    draw.line((0, 458, 460, 458), fill="yellow", width=7)
-    draw.line((460, 0, 460, 458), fill="yellow", width=7)
-    draw.line((0, 0, 460, 0), fill="yellow", width=7)
+    height_ratio = target_image.size[1]-450
+    height_ratio = height_ratio/2
+
+
+    height_top = height_ratio
+    height_bottom = target_image.size[1] - height_ratio
+    weight = 450
+
+    draw.line((0, height_top, 0, height_bottom), fill="yellow", width=7)
+    draw.line((0, height_bottom, weight, height_bottom), fill="yellow", width=7)
+    draw.line((weight, height_top, weight, height_bottom), fill="yellow", width=7)
+    draw.line((0, height_top, weight, height_top), fill="yellow", width=7)
 
 
     test = target_image.convert('RGB')
@@ -306,6 +318,7 @@ def image_choice(self,MainWindow,number):
     test.save(f"{return_hair_location}choice.jpg") #편집된 이미지를 저장합니다.
 
     target_image.close()
+    test.close()
 
     sleep(0.01)
 
@@ -346,8 +359,8 @@ def ckeck_choice(self,MainWindow):
         i.hide()
         sleep(0.01)
 
-    text = f"                미용을 시작하겠습니다.\n미용이 끝나시면 '계산' 혹은 '종료'라고 말씀해 주세요."
-    self.set_txt(text,1)
+    text = f"미용을 시작하겠습니다.\n미용이 끝나시면 '계산' 혹은 '종료'라고 말씀해 주세요."
+    #self.set_txt(text,1)
     self.voice_status_setting(text,"start_hair")
     image_choice_num = 0
     btn_control.start_hair(self,MainWindow)

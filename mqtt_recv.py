@@ -3,6 +3,7 @@ import paho.mqtt.publish as publish
 from time import sleep
 import json
 from gui import facegui
+from PIL import Image
 
 status = 0
 photo_num = 1
@@ -54,10 +55,29 @@ def on_message(client, userdata, msg):
 
         except:
             try:
-                f = open(f"{photo_save_location}test{photo_num}.jpg", "wb")
+                f_name = f"{photo_save_location}test{photo_num}.jpg"
+                f = open(f_name, "wb")
                 f.write(msg.payload)
                 print("Image Received")
                 f.close()
+
+
+                # 사이즈 변환
+                image = Image.open(f_name)
+
+                weight = 450
+                weight_ratio = weight/image.size[0]
+                hight = int((float(image.size[1])) *  weight_ratio)
+
+
+                resize_image = image.resize((weight,hight),Image.ANTIALIAS)
+
+                resize_image.save(f_name)
+                resize_image.close()
+                image.close()
+                
+
+
                 photo_num = photo_num + 1
 
                 if photo_num>=5 : 
