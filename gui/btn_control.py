@@ -46,7 +46,7 @@ def main_page_setting(self, MainWindow):
     text = "메인화면으로 돌아왔습니다.\n사용할 기능을 말씀해주세요"
     main_ui_reset(self, MainWindow)
     sleep(0.3)
-    self.set_txt(text,1)
+    #self.set_txt(text,1)
     # kakao_voice(text)
     self.voice_status_setting(text,"main")
     
@@ -61,6 +61,7 @@ def init_hair_trend(self,MainWindow):
 
 def end_trend_info(self,MainWindow):
     text_data = []
+    text_data.append(["헤어스타일 사진 보기", "사진 보여줘"])
     text_data.append(["메인화면", "메인화면 돌아가줘"])
     
     info.set_info_data(self,MainWindow,text_data)
@@ -83,3 +84,7 @@ def main_ui_reset(self, MainWindow):
     self.chart_img.hide()
     sleep(0.01)
     self.camera_timer.hide()
+
+    self.cut_img.hide()
+    self.perm_img.hide()
+    self.loading.hide()

@@ -14,9 +14,10 @@ def user_login(self,MainWindow):
             self.user_type = "men"
 
 
-            txt = "            홍길동님 반갑습니다.\n오늘은 어떤 머리를 하러 오셨나요?"
+            txt = f"       {self.user_name}({self.user_phone[7:11]})님 반갑습니다."
+            voice = f"{self.user_name}님 반갑습니다. 어떤 머리를 하러 오셨나요?"
             # kakao_voice(txt)
-            self.voice_status_setting(txt,self.window_status)
+            self.voice_status_setting(voice,self.window_status)
             self.set_txt(txt,1)
             self.face_scan_enable = 0
 

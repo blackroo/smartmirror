@@ -9,7 +9,7 @@ import sys
 from user import status_check
 
 people_type = ""
-chart_img_location = "./temp/trend_image/"
+chart_img_location = "./temp/trend_chart/"
 
 def init_trend(self, MainWindow):
     self.chart_img = QtWidgets.QLabel(self.centralwidget)
@@ -39,7 +39,9 @@ def trend_hair(self,MainWindow):
     text = "\
 현재 유행하는 남성 헤어스타일 그래프입니다.\
 1위는 댄디컷, 2위는 쉐도우펌, 3위는 가르마 컷입니다.\
-다시 들으시려면 \"다시 말해줘\". 처음으로 가시려면 \"메인화면\"이라고 말씀해주세요."
+다시 들으시려면 \"다시 말해줘\". \
+헤어스타일 사진을 보고 싶으면 \"사진 보여줘\".\
+처음으로 가시려면 \"메인화면\"이라고 말씀해주세요."
 
 
     self.voice_status_setting(text,"end_trend")

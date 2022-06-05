@@ -3,10 +3,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets #pip install pyqt5(pip install python
 from image import pi_camera
 from mqtt_client import image_send,hair_setting_send
 from picamera import PiCamera
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QMovie
 from PyQt5.QtWidgets import QPushButton
 from gui import btn_control, info
 from PIL import Image,ImageDraw,ImageFont
+from PyQt5.QtCore import Qt
 import mqtt_client
 import sys
 import os
@@ -31,10 +32,10 @@ def init_hair_gui(self,MainWindow):
     global photos
 
     self.camera_timer = QtWidgets.QLabel(self.centralwidget)
-    self.camera_timer.setGeometry(QtCore.QRect(850, 500, 1000, 150))
+    self.camera_timer.setGeometry(QtCore.QRect(600, 200, 1000, 500))
     self.camera_timer.setObjectName("info")
-    self.camera_timer.setFont(QtGui.QFont("맑은 고딕",50))
-    self.camera_timer.setStyleSheet("Color : white")
+    self.camera_timer.setFont(QtGui.QFont("맑은 고딕",200))
+    self.camera_timer.setStyleSheet("Color : #77ffff")
 
     self.photo1 = QtWidgets.QLabel(self.centralwidget)
     self.photo1.setGeometry(QtCore.QRect(450,150,10,60))
@@ -59,12 +60,30 @@ def init_hair_gui(self,MainWindow):
     photos.append(self.photo4)
 
 
+    self.cut_img = QtWidgets.QLabel(self.centralwidget)
+    self.cut_img.setGeometry(QtCore.QRect(600,300,10,60))
+    self.cut_img.resize(0,0)
+
+    self.perm_img = QtWidgets.QLabel(self.centralwidget)
+    self.perm_img.setGeometry(QtCore.QRect(1000,300,10,60))
+    self.perm_img.resize(0,0)
+
+    self.loading = QtWidgets.QLabel(self.centralwidget)
+    self.loading.setGeometry(QtCore.QRect(830,300,10,60))
+    self.loading.resize(0,0)
+
+    gif = QMovie('./font/loading.gif')
+    self.loading.setMovie(gif) # use setMovie function in our QLabel
+    self.loading.setMaximumWidth(400)
+    gif.start()
 
     self.face_type = QtWidgets.QLabel(self.centralwidget)
-    self.face_type.setGeometry(QtCore.QRect(1500, 200, 1000, 150))
+    self.face_type.setGeometry(QtCore.QRect(1500, 280, 1000, 600))
     self.face_type.setObjectName("info")
-    self.face_type.setFont(QtGui.QFont("맑은 고딕",20))
-    self.face_type.setStyleSheet("Color : white")
+    self.face_type.setFont(QtGui.QFont("맑은 고딕",25))
+    self.face_type.setAlignment(Qt.AlignLeft)
+    self.face_type.setStyleSheet("Color : #77FFFF;\
+                                font-weight : 700;")
 
 
 def json_val_save(json_val):
@@ -78,24 +97,65 @@ def face_scan(self,MainWindow):
     global json_save
     json_save = {}
 
-    text = "    - 커트 혹은 펌을 선택해 주세요 -"
-    self.set_txt(text)
-    # kakao_voice(text)
-    # self.window_status = "init_hair"
+    text = "     - 커트 혹은 펌을 선택해 주세요 -"
+    # self.set_txt(text)
+
     self.voice_status_setting(text,"init_hair")
     btn_control.init_hair_voice_info(self,MainWindow)
+
+    pixmap = QtGui.QPixmap(f"./font/cut1.png")
+    pixmap = pixmap.scaledToWidth(450)
+    self.cut_img.setPixmap(QPixmap(pixmap))
+    self.cut_img.resize(450,450)
+    self.cut_img.show()
+
+    pixmap = QtGui.QPixmap(f"./font/perm1.png")
+    pixmap = pixmap.scaledToWidth(450)
+    self.perm_img.setPixmap(QPixmap(pixmap))
+    self.perm_img.resize(450,450)
+    self.perm_img.show()
 
 def start_camera(self,MainWindow,user_hair):
     if status_check() == 0:
         return
 
+    
+
+    if(user_hair == "cut"):
+        text = "커트를 선택하셨습니다."
+
+        self.voice_status_setting(text,"wait")
+
+        pixmap = QtGui.QPixmap(f"./font/cut2.png")
+        pixmap = pixmap.scaledToWidth(450)
+        self.cut_img.setPixmap(QPixmap(pixmap))
+
+        pixmap = QtGui.QPixmap(f"./font/perm3.png")
+        pixmap = pixmap.scaledToWidth(450)
+        self.perm_img.setPixmap(QPixmap(pixmap))
+
+    if(user_hair == "perm"):
+        text = "펌을 선택하셨습니다."
+
+        self.voice_status_setting(text,"wait")
+
+        pixmap = QtGui.QPixmap(f"./font/cut3.png")
+        pixmap = pixmap.scaledToWidth(450)
+        self.cut_img.setPixmap(QPixmap(pixmap))
+
+        pixmap = QtGui.QPixmap(f"./font/perm2.png")
+        pixmap = pixmap.scaledToWidth(450)
+        self.perm_img.setPixmap(QPixmap(pixmap))
+
+    sleep(3)
+    self.cut_img.hide()
+    self.perm_img.hide()
+
     self.window_status = "wait"
     self.user_hair = user_hair
     self.face_scan_timer = 600
-    self.infomation_txt.setGeometry(QtCore.QRect(750, 420, 1000, 300))
+    
     text = "     사진 촬영을 하겠습니다.\n       정면을 바라봐 주세요"
-    self.set_txt(text)
-    # kakao_voice(text)
     self.voice_status_setting(text,"wait")
     self.camera_start(MainWindow)
     # for i in range(3,0,-1):
@@ -119,7 +179,7 @@ def thread_camera(self,MainWindow):
     self.camera_timer.hide()
 
 
-    self.set_txt("         사진 촬영중...")
+    
     pi_camera()
     image_send(self,MainWindow)
     
@@ -127,18 +187,17 @@ def thread_camera(self,MainWindow):
     text = "얼굴 분석중 입니다. 잠시만 기달려 주세요"
 
     self.voice_status_setting(text,"wait")
-    self.set_txt("         얼굴 분석 중...")
 
-    self.camera_timer.show()
+    self.loading.resize(400,400)
+    self.loading.show()
+    
 
-    for i in range(1):
-        self.camera_timer.setText(f"{i+1}/10")      
+    for i in range(10):
         sleep(1)
-        
         if self.mqtt_recv_end == 1:
             break
     
-    self.camera_timer.hide()
+    self.loading.hide()        
 
     self.mqtt_recv_end = 0
     self.mqtt_status = 0    
@@ -147,10 +206,18 @@ def thread_camera(self,MainWindow):
         
 
     # if json_save == {}:
+    #     json_save = {
+    #         'face_shape' : '테스트중_통신차단',
+    #         'before_hair' : '테스트중_통신차단'
+    #     }
+
     if json_save != {}:
+
+
+
         self.face_type.setText(f"\
 {self.user_name}님의 얼굴형\n\
-     - {json_save['face_shape']}\n\
+     - {json_save['face_shape']}\n\n\
 {self.user_name}님의 현재 헤어스타일\n\
      - {json_save['before_hair']}")
 
@@ -168,7 +235,7 @@ def thread_camera(self,MainWindow):
 
         self.voice_status_setting(text,"show_hair")
         sleep(0.3)
-        self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
+        #self.infomation_txt.setGeometry(QtCore.QRect(750, 170, 1000, 300))
 
         image_numbering()
 
@@ -274,6 +341,7 @@ def cancel_choice(self,MainWindow):
 def ckeck_choice(self,MainWindow):
     global image_choice_num,photos
     
+    self.face_type.hide()
     for i in photos:
         i.hide()
         sleep(0.01)
