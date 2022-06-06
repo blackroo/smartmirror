@@ -35,22 +35,22 @@ def init_hair_gui(self,MainWindow):
     self.camera_timer.setGeometry(QtCore.QRect(600, 200, 1000, 500))
     self.camera_timer.setObjectName("info")
     self.camera_timer.setFont(QtGui.QFont("맑은 고딕",200))
-    self.camera_timer.setStyleSheet("Color : #77ffff")
+    self.camera_timer.setStyleSheet("Color : #ffffff")
 
     self.photo1 = QtWidgets.QLabel(self.centralwidget)
-    self.photo1.setGeometry(QtCore.QRect(450,150,10,60))
+    self.photo1.setGeometry(QtCore.QRect(500,150,10,60))
     self.photo1.resize(0,0)
 
     self.photo2 = QtWidgets.QLabel(self.centralwidget)
-    self.photo2.setGeometry(QtCore.QRect(1000,150,10,60))
+    self.photo2.setGeometry(QtCore.QRect(970,150,10,60))
     self.photo2.resize(0,0)
 
     self.photo3 = QtWidgets.QLabel(self.centralwidget)
-    self.photo3.setGeometry(QtCore.QRect(450,600,10,60))
+    self.photo3.setGeometry(QtCore.QRect(500,600,10,60))
     self.photo3.resize(0,0)
 
     self.photo4 = QtWidgets.QLabel(self.centralwidget)
-    self.photo4.setGeometry(QtCore.QRect(1000,600,10,60))
+    self.photo4.setGeometry(QtCore.QRect(970,600,10,60))
     self.photo4.resize(0,0)
 
 
@@ -78,12 +78,20 @@ def init_hair_gui(self,MainWindow):
     gif.start()
 
     self.face_type = QtWidgets.QLabel(self.centralwidget)
-    self.face_type.setGeometry(QtCore.QRect(1500, 280, 1000, 600))
+    self.face_type.setGeometry(QtCore.QRect(1450, 150, 1000, 600))
     self.face_type.setObjectName("info")
-    self.face_type.setFont(QtGui.QFont("맑은 고딕",25))
+    self.face_type.setFont(QtGui.QFont("맑은 고딕",29))
     self.face_type.setAlignment(Qt.AlignLeft)
-    self.face_type.setStyleSheet("Color : #77FFFF;\
-                                font-weight : 700;")
+    self.face_type.setStyleSheet("Color : #FFFFFF;\
+                                  font-weight : 400;")
+
+    self.face_type_value = QtWidgets.QLabel(self.centralwidget)
+    self.face_type_value.setGeometry(QtCore.QRect(1470, 220, 1000, 600))
+    self.face_type_value.setObjectName("info")
+    self.face_type_value.setFont(QtGui.QFont("맑은 고딕",29))
+    self.face_type_value.setAlignment(Qt.AlignLeft)
+    self.face_type_value.setStyleSheet("Color : #FFFFFF;\
+                                  font-weight : 700;")
 
 
 def json_val_save(json_val):
@@ -97,8 +105,9 @@ def face_scan(self,MainWindow):
     global json_save
     json_save = {}
 
+    self.infomation_txt.setGeometry(QtCore.QRect(550, 200, 1000, 300))
     text = "     - 커트 혹은 펌을 선택해 주세요 -"
-    # self.set_txt(text)
+    self.set_txt(text)
 
     self.voice_status_setting(text,"init_hair")
     btn_control.init_hair_voice_info(self,MainWindow)
@@ -120,7 +129,6 @@ def start_camera(self,MainWindow,user_hair):
         return
 
     
-
     if(user_hair == "cut"):
         text = "커트를 선택하셨습니다."
 
@@ -147,9 +155,12 @@ def start_camera(self,MainWindow,user_hair):
         pixmap = pixmap.scaledToWidth(450)
         self.perm_img.setPixmap(QPixmap(pixmap))
 
-    sleep(2.5)
+    sleep(2.3)
     self.cut_img.hide()
     self.perm_img.hide()
+    self.set_txt("")
+    sleep(0.2)
+    self.infomation_txt.setGeometry(QtCore.QRect(550, 300, 1000, 300))
 
     self.window_status = "wait"
     self.user_hair = user_hair
@@ -192,7 +203,7 @@ def thread_camera(self,MainWindow):
     self.loading.show()
     
 
-    for i in range(10):
+    for i in range(2):
         sleep(1)
         if self.mqtt_recv_end == 1:
             break
@@ -205,23 +216,24 @@ def thread_camera(self,MainWindow):
 
         
 
-    #if json_save == {}:
-    #    json_save = {
-    #        'face_shape' : '테스트중_통신차단',
-    #        'before_hair' : '테스트중_통신차단'
-    #    }
+    # if json_save == {}:
+    #     json_save = {
+    #        'face_shape' : '- 테스트중',
+    #        'before_hair' : '- 테스트중'
+    #     }
 
     if json_save != {}:
 
-
-
         self.face_type.setText(f"\
-{self.user_name}님의 얼굴형\n\
-     - {json_save['face_shape']}\n\n\
-{self.user_name}님의 현재 헤어스타일\n\
-     - {json_save['before_hair']}")
+{self.user_name}님의 얼굴형\n\n\n\n\
+{self.user_name}님의 현재 헤어스타일")
+
+        self.face_type_value.setText(f"\
+    {json_save['face_shape']}\n\n\n\n\
+    {json_save['before_hair']}")
 
         self.face_type.show()
+        self.face_type_value.show()
 
 
 
@@ -274,13 +286,17 @@ def image_numbering():
     for i in range(4) :
         file_name = "test" + f"{x}"
         target_image = Image.open(f'{return_hair_location}{file_name}.jpg')  #일단 기본배경폼 이미지를 open 합니다.
-        selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
+        selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),80) #폰트경로과 사이즈를 설정해줍니다.
         draw =ImageDraw.Draw(target_image)
 
         height_ratio = target_image.size[1]-450
         height_ratio = height_ratio/2
 
-        draw.text((20,20+height_ratio),f'{x}',fill="yellow",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
+        num_height = target_image.size[1]-height_ratio-90
+        img_bottom = target_image.size[1]-height_ratio
+
+        draw.rectangle([(0, img_bottom-100), (100, img_bottom)], fill=(0, 0, 0))
+        draw.text((20,num_height),f'{x}',fill="white",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
 
         x = x+1
 
@@ -299,19 +315,25 @@ def image_choice(self,MainWindow,number):
     selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),50) #폰트경로과 사이즈를 설정해줍니다.
     draw =ImageDraw.Draw(target_image)
 
+
+    # 선택된 사진 테두리 표시
     height_ratio = target_image.size[1]-450
     height_ratio = height_ratio/2
-
 
     height_top = height_ratio
     height_bottom = target_image.size[1] - height_ratio
     weight = 450
 
-    draw.line((0, height_top, 0, height_bottom), fill="yellow", width=7)
-    draw.line((0, height_bottom, weight, height_bottom), fill="yellow", width=7)
-    draw.line((weight, height_top, weight, height_bottom), fill="yellow", width=7)
-    draw.line((0, height_top, weight, height_top), fill="yellow", width=7)
+    draw.line((0, height_top, 0, height_bottom), fill="yellow", width=10)
+    draw.line((0, height_bottom, weight, height_bottom), fill="yellow", width=10)
+    draw.line((weight, height_top, weight, height_bottom), fill="yellow", width=10)
+    draw.line((0, height_top, weight, height_top), fill="yellow", width=10)
 
+    #선택된 사진 번호 색깔 변경
+    num_height = target_image.size[1]-height_ratio-90
+
+    selectedFont =ImageFont.truetype(os.path.join(fontsFolder,'font.ttf'),80) #폰트경로과 사이즈를 설정해줍니다.
+    draw.text((20,num_height),f'{number}',fill="yellow",font=selectedFont,align='center') # fill= 속성은 무슨 색으로 채울지 설정,font=는 자신이 설정한 폰트 설정
 
     test = target_image.convert('RGB')
 
@@ -355,18 +377,19 @@ def ckeck_choice(self,MainWindow):
     global image_choice_num,photos
     
     self.face_type.hide()
+    self.face_type_value.hide()
     for i in photos:
         i.hide()
         sleep(0.01)
 
     text = f"미용을 시작하겠습니다.\n미용이 끝나시면 '계산' 혹은 '종료'라고 말씀해 주세요."
-    #self.set_txt(text,1)
+    self.set_txt("       미용을 시작하겠습니다.",1)
     self.voice_status_setting(text,"start_hair")
     image_choice_num = 0
     btn_control.start_hair(self,MainWindow)
     
 def end_hair(self,MainWindow):
-    text = f"미용이 종료되었습니다.\n 즐거운 하루 보내세요."
+    text = f"      미용이 종료되었습니다.\n       즐거운 하루 보내세요."
     self.set_txt(text,1)
     self.voice_status_setting(text,"main")
 

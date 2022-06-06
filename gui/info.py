@@ -16,79 +16,109 @@ def init_info(self,MainWindow):
     
     #time 이라는 이름으로 label 생성 [(오전/오후)시/분]
     self.time = QtWidgets.QLabel(self.centralwidget)
-    self.time.setGeometry(QtCore.QRect(1550,205,800,60))
+    self.time.setGeometry(QtCore.QRect(1590,850,800,200))
     self.time.setObjectName("time")
+    self.time.setAlignment(Qt.AlignLeft)
     #setFont(QtGui.QFont("Font_name",Font_size))
-    self.time.setFont(QtGui.QFont("NanumGothic",30)) 
-    self.time.setStyleSheet("Color : #77FFFF;\
+    self.time.setFont(QtGui.QFont("NanumGothic",70)) 
+    self.time.setStyleSheet("Color : #FFFFFF;\
                               font-weight : 700;")
 
     #date 이라는 이름으로 label 생성 [년/월/일]
     self.date = QtWidgets.QLabel(self.centralwidget)
-    self.date.setGeometry(QtCore.QRect(1550, 150, 5000, 50))
+    self.date.setGeometry(QtCore.QRect(1580, 780, 5000, 100))
     self.date.setObjectName("date")
-    self.date.setFont(QtGui.QFont("NanumGothic",30))
-    self.date.setStyleSheet("Color : #77FFFF;\
-                            font-weight : 700;")
+    self.date.setAlignment(Qt.AlignLeft)
+    self.date.setFont(QtGui.QFont("NanumGothic",40))
+    self.date.setStyleSheet("Color : #FFFFFF;\
+                            font-weight : 100;")
 
     #title
     self.title = QtWidgets.QLabel(self.centralwidget)
-    self.title.setGeometry(QtCore.QRect(1476,15,10,60))
+    self.title.setGeometry(QtCore.QRect(1500,950,10,60))
     pixmap = QtGui.QPixmap(f"./font/icon.png")
+    self.title.setAlignment(Qt.AlignLeft)
     self.title.setPixmap(QPixmap(pixmap))
     self.title.resize(444,138)
-    self.title.show()
 
     self.infomation_txt = QtWidgets.QLabel(self.centralwidget)
     self.infomation_txt.setGeometry(QtCore.QRect(550, 300, 1000, 300))
     self.infomation_txt.setObjectName("info")
     self.infomation_txt.setFont(QtGui.QFont("NanumGothic",45))
     self.infomation_txt.setAlignment(Qt.AlignLeft)
-    self.infomation_txt.setStyleSheet("Color : #77FFFF;\
+    self.infomation_txt.setStyleSheet("Color : #FFFFFF;\
                                      font-weight : 700;")
 
+
+    self.voice_info_icon = QtWidgets.QLabel(self.centralwidget)
+    self.voice_info_icon.setGeometry(QtCore.QRect(20,100,10,60))
+    pixmap = QtGui.QPixmap(f"./font/speaker.png")
+    pixmap = pixmap.scaledToWidth(60)
+    self.voice_info_icon.setAlignment(Qt.AlignLeft)
+    self.voice_info_icon.setPixmap(QPixmap(pixmap))
+    self.voice_info_icon.resize(60,60)
+
+
     self.voice_info = QtWidgets.QLabel(self.centralwidget)
-    self.voice_info.setGeometry(QtCore.QRect(30, 100, 500, 800))
+    self.voice_info.setGeometry(QtCore.QRect(90, 100, 500, 800))
     self.voice_info.setObjectName("info")
-    self.voice_info.setFont(QtGui.QFont("NanumGothic",25))
+    self.voice_info.setFont(QtGui.QFont("NanumGothic",35))
     self.voice_info.setAlignment(Qt.AlignLeft)
-    self.voice_info.setStyleSheet("Color : #77FFFF;\
+    self.voice_info.setStyleSheet("Color : #FFFFFF;\
                                     font-weight : 700;")
 
-    # #image
-    # self.back_img1 = QtWidgets.QLabel(self.centralwidget)
-    # self.back_img1.setGeometry(QtCore.QRect(0,541,10,60))
-    # pixmap = QtGui.QPixmap(f"./font/1.jpg")
-    # self.back_img1.setPixmap(QPixmap(pixmap))
-    # self.back_img1.resize(450,539)
-    # self.back_img1.show()
+    self.voice_info_txt = QtWidgets.QLabel(self.centralwidget)
+    self.voice_info_txt.setGeometry(QtCore.QRect(20, 200, 500, 800))
+    self.voice_info_txt.setObjectName("info")
+    self.voice_info_txt.setFont(QtGui.QFont("NanumGothic",32))
+    self.voice_info_txt.setAlignment(Qt.AlignLeft)
+    self.voice_info_txt.setStyleSheet("Color : #FFFFFF;\
+                                    font-weight : 100;")
 
-    # self.back_img2 = QtWidgets.QLabel(self.centralwidget)
-    # self.back_img2.setGeometry(QtCore.QRect(1470,592,10,60))
-    # pixmap = QtGui.QPixmap(f"./font/2.jpg")
-    # pixmap = pixmap.scaledToWidth(450)
-    # self.back_img2.setPixmap(QPixmap(pixmap))
-    # self.back_img2.resize(450,488)
-    # self.back_img2.show()
+    self.voice_info_value = QtWidgets.QLabel(self.centralwidget)
+    self.voice_info_value.setGeometry(QtCore.QRect(70, 270, 500, 800))
+    self.voice_info_value.setObjectName("info")
+    self.voice_info_value.setFont(QtGui.QFont("NanumGothic",32))
+    self.voice_info_value.setAlignment(Qt.AlignLeft)
+    self.voice_info_value.setStyleSheet("Color : #FFFFFF;\
+                                    font-weight : 700;")
+
+
     
     btn_control.main_page_voice_info(self,MainWindow)
 
 
 def set_info_data(self,MainWindow,data):
 
-    text = f"\
-    음성 인식 안내\n\n\n"
+    info = "음성 인식 안내"
+    txt = ""
+    value = ""
 
     for i in data:
-        text = text + f" [ {i[0]} ]\n\
-       \"{i[1]}\"\n\n"
+    
+        txt = txt + f"{i[0]}\n\n\n\n"
+        value = value + f" \"{i[1]}\"\n\n\n\n"
 
 
-    self.voice_info.setText(text)
+    pixmap = QtGui.QPixmap(f"./font/speaker.png")
+    pixmap = pixmap.scaledToWidth(60)
+    self.voice_info_icon.setPixmap(QPixmap(pixmap))
+
+    
+    self.voice_info.setText(info)
+    self.voice_info_txt.setText(txt)
+    self.voice_info_value.setText(value)
 
 def wait_info_data(self,MainWindow):
-    self.voice_info.setText("\
-    음성 인식 일시정지")
+
+    pixmap = QtGui.QPixmap(f"./font/stop_speaker.png")
+    pixmap = pixmap.scaledToWidth(60)
+    self.voice_info_icon.setPixmap(QPixmap(pixmap))
+
+
+    self.voice_info.setText("음성 인식 일시정지")
+    self.voice_info_txt.setText("")
+    self.voice_info_value.setText("")
 
 
 def txt_print(self,MainWindow):

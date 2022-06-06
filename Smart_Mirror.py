@@ -76,7 +76,7 @@ class Ui_MainWindow(object):
             self.txt_timer = -1
             self.info_data = f"{data}"
         elif timer == 1:
-            self.txt_timer = 3*5
+            self.txt_timer = 4*5
             self.info_data = f"{data}"
 
     

@@ -1,6 +1,7 @@
 
 from gui import info
 from time import sleep
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 def main_page_voice_info(self,MainWindow):
     text_data = []
@@ -12,7 +13,7 @@ def main_page_voice_info(self,MainWindow):
 def init_hair_voice_info(self,MainWindow):
     text_data = []
     text_data.append(["커트", "커트 해줘"])
-    text_data.append(["펌", "펌 해줘"])
+    text_data.append(["펌", "펌으로 해줘"])
     text_data.append(["메인화면", "메인화면 돌아가줘"])
     
     info.set_info_data(self,MainWindow,text_data)
@@ -69,6 +70,8 @@ def end_trend_info(self,MainWindow):
 def main_ui_reset(self, MainWindow):
     main_page_voice_info(self, MainWindow)
     self.window_status = "main"
+
+    self.infomation_txt.setGeometry(QtCore.QRect(550, 300, 1000, 300))
     sleep(0.01)
     self.photo1.hide()
     sleep(0.01)
@@ -80,6 +83,8 @@ def main_ui_reset(self, MainWindow):
     sleep(0.01)
 
     self.face_type.hide()
+    sleep(0.01)
+    self.face_type_value.hide()
     sleep(0.01)
     self.chart_img.hide()
     sleep(0.01)

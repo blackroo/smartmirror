@@ -17,7 +17,7 @@ def init_trend(self, MainWindow):
     self.chart_img.resize(0,0)
 
 def start_trend(self, MainWindow):
-    text = " - 추천받을 헤어스타일의 성별을 말씀해주세요 -"
+    text = "        추천받을 헤어스타일의\n          성별을 말씀해주세요."
     self.set_txt(text)
 
     self.voice_status_setting(text,"init_trand")
