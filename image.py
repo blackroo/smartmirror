@@ -73,7 +73,7 @@ def user_face_scan(self,MainWindow):
                             face_login(self,MainWindow)
 
                         elif(self.window_status=="start_hair"):
-                            if time_count>=130:
+                            if time_count>=70:
                                 now = time.localtime()
                                 file_name = f"{emotion_image_location}{now.tm_year}_{now.tm_mon}_{now.tm_mday}_{now.tm_hour}{now.tm_min}{now.tm_sec}_{i}.jpg"
                                 i = i+1
@@ -87,7 +87,7 @@ def user_face_scan(self,MainWindow):
 
                 time_count = time_count +1
                 if time_count>5000:
-                    time_count = 100
+                    time_count = 50
                 sleep(0.05)
                 #cv2.imshow('video', frame)
                 error_count = 0
@@ -96,7 +96,7 @@ def user_face_scan(self,MainWindow):
                 print(self.video_stop)
                 sleep(1)
                 error_count = error_count + 1
-                if error_count > 30:
+                if error_count > 10:
                     cap.release()
                     del cap
                     cap = cv2.VideoCapture(0)
@@ -104,7 +104,7 @@ def user_face_scan(self,MainWindow):
                         print('width: {}, height : {}'.format(cap.get(3), cap.get(4)))
                     else:
                         print("No Camera")
-                    error_count = 20
+                    error_count = 0
 
             
     except:

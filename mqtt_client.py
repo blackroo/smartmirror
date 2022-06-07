@@ -46,7 +46,7 @@ def face_login(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{login_dir_path}/{i}")
-        #publish.single(f"login", byteArr, hostname=mqtt_server_ip)
+        publish.single(f"login", byteArr, hostname=mqtt_server_ip)
 
 def emotion_scan(self,MainWindow):
     file_list = os.listdir(emotion_dir_path)

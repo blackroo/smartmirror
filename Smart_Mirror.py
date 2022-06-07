@@ -40,9 +40,9 @@ class Ui_MainWindow(object):
     # user_type = "None"
     # user_hair = ""
 
-    user_name = "홍길동"
-    user_phone = "01012345678"
-    user_type = "men"
+    user_name = ""
+    user_phone = ""
+    user_type = ""
     user_hair = ""
 
     window_status = "main"

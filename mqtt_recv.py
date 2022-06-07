@@ -3,6 +3,7 @@ import paho.mqtt.publish as publish
 from time import sleep
 import json
 from gui import facegui
+import user
 from PIL import Image
 
 mqtt_server_ip = '54.150.133.192'
@@ -41,6 +42,9 @@ def message_type(json_type):
     elif json_type['type'] == 'emotion':
         facegui.emotion_recv(json_type)
         print("emotion recv")
+    elif json_type['type'] == 'login':
+        user.user_data_setting(json_type)
+        #print("login recv")
     pass
 
 

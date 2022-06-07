@@ -238,8 +238,8 @@ def thread_camera(self,MainWindow):
 {self.user_name}님의 현재 헤어스타일")
 
         self.face_type_value.setText(f"\
-    {json_save['face_shape']}\n\n\n\n\
-    {json_save['before_hair']}")
+    - {json_save['face_shape']}\n\n\n\n\
+    - {json_save['before_hair']}")
 
         self.face_type.show()
         self.face_type_value.show()
