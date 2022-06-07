@@ -93,3 +93,6 @@ def main_ui_reset(self, MainWindow):
     self.cut_img.hide()
     self.perm_img.hide()
     self.loading.hide()
+
+    self.emotion_img.resize(0,0)
+    self.emotion_img.hide()

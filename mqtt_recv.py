@@ -5,6 +5,10 @@ import json
 from gui import facegui
 from PIL import Image
 
+mqtt_server_ip = '54.150.133.192'
+#mqtt_server_ip = "127.0.0.1"
+
+
 status = 0
 photo_num = 1
 recv_end = 0
@@ -33,6 +37,10 @@ def message_type(json_type):
     if json_type['type'] == 'bigdata':
         facegui.json_val_save(json_type)
         print("json recv")
+    
+    elif json_type['type'] == 'emotion':
+        facegui.emotion_recv(json_type)
+        print("emotion recv")
     pass
 
 
@@ -40,20 +48,21 @@ def message_type(json_type):
 def on_message(client, userdata, msg):
     global status, photo_num, photo_save_location, recv_end
 
-    if status == 1:
+    
+    try:
+        check = str(msg.payload.decode("utf-8"))
+        print("msg recv")
         try:
-            check = str(msg.payload.decode("utf-8"))
-            print("msg recv")
-            try:
-                d = json.loads(msg.payload)
-                message_type(d)
-                
-            except:
-                print("message error1")
-                print("error: "+check)
-                print()
-
+            d = json.loads(msg.payload)
+            message_type(d)
+            
         except:
+            print("message error1")
+            print("error: "+ check)
+            print()
+
+    except:
+        if status == 1:
             try:
                 f_name = f"{photo_save_location}test{photo_num}.jpg"
                 f = open(f_name, "wb")
@@ -112,7 +121,7 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 # address : localhost, port: 1883 에 연결
 try:
-    client.connect('54.150.133.192', 1883)
+    client.connect(mqtt_server_ip, 1883)
     client.subscribe('Mirror', 1)
     client.loop_start()
 

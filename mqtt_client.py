@@ -1,6 +1,10 @@
 import paho.mqtt.publish as publish
 import time
 import os
+
+mqtt_server_ip = "54.150.133.192"
+#mqtt_server_ip = "127.0.0.1"
+
 dir_path = "./temp/image"
 login_dir_path = "./temp/login_image"
 emotion_dir_path = "./temp/emotion_image"
@@ -28,12 +32,12 @@ def image_send(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{dir_path}/{i}")
-        publish.single(f"{directory}", byteArr, hostname="54.150.133.192")
+        publish.single(f"{directory}", byteArr, hostname=mqtt_server_ip)
  
 def hair_setting_send(self,MainWindow):
 
     msg = f"init_hair,{self.user_name},{self.user_phone},{self.user_type},{self.user_hair}"
-    publish.single("Image", msg, hostname="54.150.133.192")
+    publish.single("Image", msg, hostname=mqtt_server_ip)
 
 def face_login(self,MainWindow):
     file_list = os.listdir(login_dir_path)
@@ -42,7 +46,7 @@ def face_login(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{login_dir_path}/{i}")
-        #publish.single(f"login", byteArr, hostname="54.150.133.192")
+        #publish.single(f"login", byteArr, hostname=mqtt_server_ip)
 
 def emotion_scan(self,MainWindow):
     file_list = os.listdir(emotion_dir_path)
@@ -51,4 +55,4 @@ def emotion_scan(self,MainWindow):
 
     for i in file_list:
         byteArr = image_byte(f"{emotion_dir_path}/{i}")
-        publish.single(f"feel", byteArr, hostname="54.150.133.192")
+        publish.single(f"emotion", byteArr, hostname=mqtt_server_ip)

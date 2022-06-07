@@ -117,6 +117,10 @@ class Ui_MainWindow(object):
     def mqtt_status_save(self,MainWindow):
         mqtt_recv.recv_status_check(self,MainWindow)
  
+    def emotion_start(self,MainWindow):
+        facegui.emotion_icon(self,MainWindow)
+        pass
+
     #----------------------------------------------------------------------------------------------------
     #------------------------ 쓰레드 ---------------------------------------------------------------------
     #----------------------------------------------------------------------------------------------------
@@ -167,6 +171,11 @@ class Ui_MainWindow(object):
         thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
         thread.start()
 
+    def emotion_thread(self,MainWindow):
+        thread=threading.Thread(target=self.emotion_start,args=(self,))
+        thread.daemon=True #프로그램 종료시 프로세스도 함께 종료 (백그라운드 재생 X)
+        thread.start()
+
 
 #-------------메인---------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------
@@ -187,6 +196,7 @@ if __name__=="__main__":
     ui.user_scan(MainWindow)
     ui.login_timer(MainWindow)
     ui.mqtt_start(MainWindow)
+    ui.emotion_thread(MainWindow)
 
     MainWindow.show()
 

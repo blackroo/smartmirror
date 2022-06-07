@@ -27,6 +27,8 @@ photos = []
 image_choice_num = 0
 
 json_save = {}
+emotion = {}
+
 
 def init_hair_gui(self,MainWindow):
     global photos
@@ -93,12 +95,19 @@ def init_hair_gui(self,MainWindow):
     self.face_type_value.setStyleSheet("Color : #FFFFFF;\
                                   font-weight : 700;")
 
+    self.emotion_img = QtWidgets.QLabel(self.centralwidget)
+    self.emotion_img.setGeometry(QtCore.QRect(1800,150,10,60))
+    self.emotion_img.resize(0,0)
 
 def json_val_save(json_val):
     global json_save
     json_save = json_val
     print(json_save)
 
+def emotion_recv(data):
+    global emotion
+    emotion = data
+    print(emotion)
 
 
 def face_scan(self,MainWindow):
@@ -382,15 +391,48 @@ def ckeck_choice(self,MainWindow):
         i.hide()
         sleep(0.01)
 
+    self.emotion_img.show()
+
     text = f"미용을 시작하겠습니다.\n미용이 끝나시면 '계산' 혹은 '종료'라고 말씀해 주세요."
     self.set_txt("       미용을 시작하겠습니다.",1)
     self.voice_status_setting(text,"start_hair")
     image_choice_num = 0
     btn_control.start_hair(self,MainWindow)
-    
+
+def emotion_icon(self,MainWindow):
+    global emotion
+    smile_pixmap = QtGui.QPixmap(f"./font/smile.png")
+    smile_pixmap = smile_pixmap.scaledToWidth(100)
+    sad_pixmap = QtGui.QPixmap(f"./font/sad.png")
+    sad_pixmap = sad_pixmap.scaledToWidth(100)
+    while 1:
+        if self.window_status!="start_hair":
+            pass
+
+        else:
+            if  emotion != {}:
+                try:
+                    if emotion['emotion'] == 'happy':
+                        self.emotion_img.setPixmap(QPixmap(smile_pixmap))
+                        self.emotion_img.resize(100,100)
+                        print("emotion setting")
+                        emotion = {}
+
+                    elif emotion['emotion'] == 'sad':
+                        self.emotion_img.setPixmap(QPixmap(sad_pixmap))
+                        self.emotion_img.resize(100,100)
+                        print("emotion setting")
+                        emotion = {}
+
+                except:
+                    print("emotion setting fail")
+
+        sleep(1)
+
 def end_hair(self,MainWindow):
     text = f"      미용이 종료되었습니다.\n       즐거운 하루 보내세요."
     self.set_txt(text,1)
     self.voice_status_setting(text,"main")
 
     btn_control.main_page_voice_info(self,MainWindow)
+    btn_control.main_ui_reset(self,MainWindow)
