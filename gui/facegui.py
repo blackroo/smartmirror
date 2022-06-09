@@ -419,7 +419,7 @@ def emotion_icon(self,MainWindow):
     global emotion
     smile_pixmap = QtGui.QPixmap(f"./font/smile.png")
     smile_pixmap = smile_pixmap.scaledToWidth(100)
-    sad_pixmap = QtGui.QPixmap(f"./font/sad.png")
+    sad_pixmap = QtGui.QPixmap(f"./font/angry.png")
     sad_pixmap = sad_pixmap.scaledToWidth(100)
     while 1:
         if self.window_status!="start_hair":
@@ -434,7 +434,7 @@ def emotion_icon(self,MainWindow):
                         print("emotion setting")
                         emotion = {}
 
-                    elif emotion['emotion'] == 'sad':
+                    elif emotion['emotion'] == 'angry':
                         self.emotion_img.setPixmap(QPixmap(sad_pixmap))
                         self.emotion_img.resize(100,100)
                         print("emotion setting")
