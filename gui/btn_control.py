@@ -54,8 +54,8 @@ def main_page_setting(self, MainWindow):
 
 def init_hair_trend(self,MainWindow):
     text_data = []
-    text_data.append(["남성 헤어스타일 추천", "남성"])
-    text_data.append(["여성 헤어스타일 추천", "여성"])
+    text_data.append(["커트 해어스타일", "커트 해줘"])
+    text_data.append(["펌 헤어스타일", "펌으로 해줘"])
     text_data.append(["메인화면", "메인화면 돌아가줘"])
     
     info.set_info_data(self,MainWindow,text_data)
@@ -66,6 +66,16 @@ def end_trend_info(self,MainWindow):
     text_data.append(["메인화면", "메인화면 돌아가줘"])
     
     info.set_info_data(self,MainWindow,text_data)
+
+
+def hairimg_trend_info(self,MainWindow):
+    text_data = []
+    text_data.append(["헤어스타일 선택", "1번, 2번, 3번, 4번"])
+    text_data.append(["메인화면", "메인화면 돌아가줘"])
+    
+    info.set_info_data(self,MainWindow,text_data)
+
+
 
 def main_ui_reset(self, MainWindow):
     main_page_voice_info(self, MainWindow)
@@ -86,8 +96,6 @@ def main_ui_reset(self, MainWindow):
     sleep(0.01)
     self.face_type_value.hide()
     sleep(0.01)
-    self.chart_img.hide()
-    sleep(0.01)
     self.camera_timer.hide()
 
     self.cut_img.hide()
@@ -96,3 +104,8 @@ def main_ui_reset(self, MainWindow):
 
     self.emotion_img.resize(0,0)
     self.emotion_img.hide()
+
+    self.men_cut_chart.hide()
+    self.men_perm_chart.hide()
+    self.women_cut_chart.hide()
+    self.women_perm_chart.hide()

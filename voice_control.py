@@ -31,6 +31,8 @@ choice_2 = ["2번", "이본", "이번", "입원"]
 choice_3 = ["3번", "삼본", "삼번"]
 choice_4 = ["4번", "사본", "사번","카본"]
 
+cmd_voice_info_img = ["설명"]
+
 choice_ckeck = ["확인"]
 choice_cancel = ["취소"]
 
@@ -39,6 +41,9 @@ end_hair = ["계산", "종료"]
 cmd_trend = ["유행", "우행", "유행하는 머리", "우행하는 머리", "최신 유행"]
 cmd_men = ["남성", "남자","삼성"]
 cmd_women = ["여성", "여자"]
+
+cmd_show_img = ["사진", "보여줘"]
+cmd_voice_retry = ["다시", "말해줘"]
 
 def voice_scan(self,MainWindow):
     while 1:
@@ -62,9 +67,9 @@ def voice_scan(self,MainWindow):
 
 def voice_command(self,MainWindow,input_data):
     global cmd_main, cmd_facescan, cmd_cut, cmd_perm, cmd_trend
-    global choice_1, choice_2, choice_3, choice_4
+    global choice_1, choice_2, choice_3, choice_4, cmd_voice_info_img
     global choice_cancel, choice_ckeck, end_hair
-    global cmd_trend, cmd_men, cmd_women
+    global cmd_trend, cmd_men, cmd_women, cmd_show_img, cmd_voice_retry
 
 
     #메인화면 돌아가기   
@@ -104,6 +109,9 @@ def voice_command(self,MainWindow,input_data):
             facegui.image_choice(self,MainWindow,3)
         elif(voice_check(input_data, choice_4)):
             facegui.image_choice(self,MainWindow,4)
+        elif(voice_check(input_data, cmd_voice_info_img)):
+            print("설명")
+            facegui.voice_info_img(self,MainWindow)
 
     elif(self.window_status == "choice_hair"):
         if(voice_check(input_data, choice_ckeck)):
@@ -115,11 +123,35 @@ def voice_command(self,MainWindow,input_data):
         if(voice_check(input_data, end_hair)):
             facegui.end_hair(self,MainWindow)
 
-    elif(self.window_status == "init_trand"):
-        if(voice_check(input_data, cmd_men)):
-            trendgui.select_trend(self,MainWindow,"men")
-        elif(voice_check(input_data, cmd_women)):
-            trendgui.select_trend(self,MainWindow,"women")
+    elif(self.window_status == "init_trend"):
+        if(voice_check(input_data, cmd_cut)):
+            trendgui.select_trend(self,MainWindow,"cut")
+        elif(voice_check(input_data, cmd_perm)):
+            trendgui.select_trend(self,MainWindow,"perm")
+
+    elif(self.window_status == "chart_trend"):
+        if(voice_check(input_data, cmd_show_img)):
+            print("img show trend")
+            trendgui.trend_img_show(self,MainWindow)
+        elif(voice_check(input_data, cmd_voice_retry)):
+            trendgui.voice_retry(self,MainWindow)
+
+    elif(self.window_status == "img_trend"):
+        if(voice_check(input_data, choice_1)):
+            trendgui.choice_img(self,MainWindow,1)
+        elif(voice_check(input_data, choice_2)):
+            trendgui.choice_img(self,MainWindow,2)
+        elif(voice_check(input_data, choice_3)):
+            trendgui.choice_img(self,MainWindow,3)
+        elif(voice_check(input_data, choice_4)):
+            trendgui.choice_img(self,MainWindow,4)
+
+    elif(self.window_status == "choice_hair_trend"):
+        if(voice_check(input_data, choice_ckeck)):
+            facegui.ckeck_choice(self,MainWindow)
+        elif(voice_check(input_data, choice_cancel)):
+            trendgui.cancel_choice_trend(self,MainWindow)
+
 
 
 def voice_check(input_data,cmd):

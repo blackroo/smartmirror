@@ -212,7 +212,7 @@ def thread_camera(self,MainWindow):
     self.loading.show()
     
 
-    for i in range(2):
+    for i in range(10):
         sleep(1)
         if self.mqtt_recv_end == 1:
             break
@@ -315,6 +315,22 @@ def image_numbering():
 
         target_image.close()
         test.close()
+
+def voice_info_img(self,MainWindow):
+
+    txt = f"\
+첫 번째 사진입니다. {json_save['content1']}\
+두 번째 사진입니다. {json_save['content2']}\
+세 번째 사진입니다. {json_save['content3']}\
+네 번째 사진입니다. {json_save['content4']}\
+미용하실 헤어스타일의 번호를 말씀해 주세요.\
+처음으로 돌아가시려면 \"메인화면\" 이라고 말씀해 주세요.\
+다시 들으시려면 \"설명해줘\" 라고 말씀해 주세요."
+    print(txt)
+
+    self.voice_status_setting(txt,self.window_status)
+    pass
+
 
 def image_choice(self,MainWindow,number):
     global return_hair_location, fontsFolder,photos,image_choice_num
